@@ -1,0 +1,66 @@
+{
+  "updatedAt": "2026-01-30T11:53:17.568Z",
+  "allowNewEntry": true,
+  "emergencyClose": false,
+  "lockedUntil": null,
+  "lockReason": null,
+  "blockedDirection": null,
+  "reasons": [],
+  "dangerScore": 10,
+  "dangerFactors": {
+    "exposurePct": 0,
+    "dailyLoss": 0,
+    "concentration": 0,
+    "faWarning": 10,
+    "combinedRisk": 0
+  },
+  "metrics": {
+    "totalBalance": 196.8,
+    "effectiveBalance": 196.8,
+    "totalExposure": 0,
+    "exposurePct": 0,
+    "dailyPnl": 0,
+    "dailyPnlPct": 0,
+    "directions": {
+      "long": 0,
+      "short": 0,
+      "none": 4
+    },
+    "faWarning": "YELLOW",
+    "activePositions": 0,
+    "combinedRiskPct": 0
+  },
+  "accounts": [
+    {
+      "name": "swing",
+      "balance": 49.429166,
+      "direction": "none"
+    },
+    {
+      "name": "daytrade",
+      "balance": 49.414162,
+      "direction": "none"
+    },
+    {
+      "name": "scalp",
+      "balance": 48.543706,
+      "direction": "none"
+    },
+    {
+      "name": "ultrascalp",
+      "balance": 49.40931,
+      "direction": "none"
+    }
+  ],
+  "virtualTrades": [],
+  "thresholds": {
+    "maxExposurePct": 50,
+    "maxSameDirection": 3,
+    "dailyLossStopPct": 5,
+    "consecutiveLossDays": 3,
+    "btc1hVolatilityStop": 7,
+    "btc4hStage1": 10,
+    "btc4hStage2": 12,
+    "maxCombinedRiskPct": 7
+  }
+}
