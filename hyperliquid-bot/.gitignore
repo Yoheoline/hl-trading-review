@@ -1,0 +1,11 @@
+.env 
+node_modules/ 
+*.log 
+state-*.json 
+backtest-*-results.json
+__pycache__/ 
+*.pyc 
+.claude/ 
+
+.evolve-test-tmp.js
+.pr-body-tmp.md

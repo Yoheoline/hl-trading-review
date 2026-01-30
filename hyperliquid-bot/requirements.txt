@@ -1,0 +1,7 @@
+﻿hyperliquid-python-sdk
+python-dotenv
+pandas
+numpy
+ta
+requests
+websockets

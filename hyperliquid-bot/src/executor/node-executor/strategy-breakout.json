@@ -1,0 +1,1 @@
+{"enabled":true,"mode":"PAPER","coin":"BTC","size":0.00015,"checkInterval":5000,"priceWindowMinutes":3,"entryThreshold":0.0005,"breakoutWindowMinutes":5,"takeProfitPct":0.005,"stopLossPct":0.0025,"maxPositionMinutes":45,"cooldownMinutes":3,"signals":{"momentum":false,"breakout":true}}

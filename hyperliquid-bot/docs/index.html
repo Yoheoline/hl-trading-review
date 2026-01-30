@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HL">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230d0d0f' width='100' height='100' rx='20'/><text y='65' x='50' text-anchor='middle' font-size='50' fill='%2382fac0'>HL</text></svg>">
+  <title>HL Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg-primary: #0d0d0f;
+      --bg-secondary: #16161a;
+      --bg-tertiary: #1c1c21;
+      --border: #2a2a32;
+      --text-primary: #ffffff;
+      --text-secondary: #8b8b8e;
+      --text-tertiary: #5c5c5e;
+      --green: #82fac0;
+      --green-dim: #3d7a5a;
+      --red: #ff5a5a;
+      --red-dim: #7a3d3d;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 16px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+    
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--green);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--bg-primary);
+    }
+    
+    .updated {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+    }
+    
+    .total-section {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .total-label {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .total-value {
+      font-size: 2rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .total-row {
+      display: flex;
+      gap: 24px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .total-item {
+      flex: 1;
+    }
+    
+    .total-item-label {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2px;
+    }
+    
+    .total-item-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .accounts-table {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .table-header {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .table-header span:nth-child(2),
+    .table-header span:nth-child(3) {
+      text-align: right;
+    }
+    
+    .account-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+    
+    .account-row:last-child {
+      border-bottom: none;
+    }
+    
+    .account-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .account-name {
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+    
+    .account-position {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .position-side {
+      font-weight: 500;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    
+    .position-side.long {
+      background: var(--green-dim);
+      color: var(--green);
+    }
+    
+    .position-side.short {
+      background: var(--red-dim);
+      color: var(--red);
+    }
+    
+    .no-position {
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+    
+    .pos-pnl {
+      font-weight: 500;
+      margin-left: 8px;
+    }
+    
+    .account-balance {
+      font-weight: 500;
+      font-size: 0.9rem;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    
+    .account-pnl {
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      min-width: 70px;
+    }
+    
+    .pnl-positive { color: var(--green); }
+    .pnl-negative { color: var(--red); }
+    .pnl-zero { color: var(--text-tertiary); }
+    
+    .account-pnl small, .total-item-value small {
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+    
+    .refresh-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 14px;
+      margin-top: 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .refresh-btn:active {
+      background: var(--bg-tertiary);
+    }
+    
+    .refresh-btn.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .loading-placeholder {
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 40px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .refresh-btn.loading .icon {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">HL</div>
+      Dashboard
+    </div>
+    <div class="updated" id="updated">--:--</div>
+  </div>
+  
+  <div class="total-section">
+    <div class="total-label">Total Equity</div>
+    <div class="total-value" id="total">--</div>
+    <div class="total-row">
+      <div class="total-item">
+        <div class="total-item-label">All-time PnL</div>
+        <div class="total-item-value" id="totalPnl">--</div>
+      </div>
+      <div class="total-item">
+        <div class="total-item-label">Position PnL</div>
+        <div class="total-item-value" id="totalPosPnl">--</div>
+      </div>
+      <div class="total-item">
+        <div class="total-item-label">Positions</div>
+        <div class="total-item-value" id="totalPositions">--</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="accounts-table">
+    <div class="table-header">
+      <span>Account</span>
+      <span>Balance</span>
+      <span>PnL</span>
+    </div>
+    <div id="accounts">
+      <div class="loading-placeholder">Loading...</div>
+    </div>
+  </div>
+  
+  <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">
+    <span class="icon">↻</span>
+    <span>Refresh</span>
+  </button>
+
+  <script>
+    const ACCOUNTS = [
+      { name: 'Swing', wallet: '0xfb963F78f2A2e5bb80a79e9f9B5c7796EDdCB68C', principal: 49.43 },
+      { name: 'Daytrade', wallet: '0x9667e323E6c2A5200ABD6d5888364a0B98C59685', principal: 49.41 },
+      { name: 'Scalp', wallet: '0x4dFB23A0A1A725304c4Bb786F44f97E2F81f08f7', principal: 49.41 },
+      { name: 'Ultrascalp', wallet: '0xd81afb4d41112c3573eBCe3e440d09c871908Aa2', principal: 49.41 },
+    ];
+
+    async function fetchAccount(wallet) {
+      const res = await fetch('https://api.hyperliquid.xyz/info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'clearinghouseState', user: wallet })
+      });
+      return res.json();
+    }
+
+    function formatUSD(num, showSign = false) {
+      const val = parseFloat(num);
+      const sign = showSign ? (val >= 0 ? '+' : '-') : (val < 0 ? '-' : '');
+      return sign + '$' + Math.abs(val).toLocaleString('en-US', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+      });
+    }
+
+    function renderAccount(name, data, principal) {
+      const balance = parseFloat(data.marginSummary.accountValue);
+      const positions = data.assetPositions.filter(p => parseFloat(p.position.szi) !== 0);
+      
+      let positionHtml = '<span class="no-position">No position</span>';
+      let unrealizedPnl = 0;
+      
+      if (positions.length > 0) {
+        const pos = positions[0].position;
+        const size = parseFloat(pos.szi);
+        const isLong = size > 0;
+        unrealizedPnl = parseFloat(pos.unrealizedPnl);
+        const posPnlClass = unrealizedPnl >= 0 ? 'pnl-positive' : 'pnl-negative';
+        
+        positionHtml = `
+          <span class="position-side ${isLong ? 'long' : 'short'}">${isLong ? 'LONG' : 'SHORT'}</span>
+          <span>${pos.coin} ${Math.abs(size).toFixed(5)} @ $${parseFloat(pos.entryPx).toLocaleString()}</span>
+          <span class="pos-pnl ${posPnlClass}">${formatUSD(unrealizedPnl, true)}</span>
+        `;
+      }
+      
+      // Calculate all-time PNL from principal
+      const allTimePnl = balance - principal;
+      const allTimePnlPct = (allTimePnl / principal * 100);
+      const pnlClass = allTimePnl > 0 ? 'pnl-positive' : allTimePnl < 0 ? 'pnl-negative' : 'pnl-zero';
+      
+      return {
+        html: `
+          <div class="account-row">
+            <div class="account-info">
+              <div class="account-name">${name}</div>
+              <div class="account-position">${positionHtml}</div>
+            </div>
+            <div class="account-balance">${formatUSD(balance)}</div>
+            <div class="account-pnl ${pnlClass}">${formatUSD(allTimePnl, true)}<br><small>${allTimePnlPct >= 0 ? '+' : ''}${allTimePnlPct.toFixed(1)}%</small></div>
+          </div>
+        `,
+        balance,
+        pnl: allTimePnl,
+        unrealizedPnl,
+        principal,
+        hasPosition: positions.length > 0
+      };
+    }
+
+    async function loadAll() {
+      const accountsDiv = document.getElementById('accounts');
+      const totalDiv = document.getElementById('total');
+      const totalPnlDiv = document.getElementById('totalPnl');
+      const totalPositionsDiv = document.getElementById('totalPositions');
+      const updatedDiv = document.getElementById('updated');
+      const refreshBtn = document.getElementById('refreshBtn');
+      
+      refreshBtn.classList.add('loading');
+
+      try {
+        const results = await Promise.all(
+          ACCOUNTS.map(acc => fetchAccount(acc.wallet))
+        );
+
+        let totalBalance = 0;
+        let totalPnl = 0;
+        let totalPositions = 0;
+        let html = '';
+
+        let totalPrincipal = 0;
+        let totalUnrealizedPnl = 0;
+        
+        results.forEach((data, i) => {
+          const result = renderAccount(ACCOUNTS[i].name, data, ACCOUNTS[i].principal);
+          totalBalance += result.balance;
+          totalPnl += result.pnl;
+          totalPrincipal += result.principal;
+          totalUnrealizedPnl += result.unrealizedPnl;
+          if (result.hasPosition) totalPositions++;
+          html += result.html;
+        });
+
+        const totalPnlPct = (totalPnl / totalPrincipal * 100);
+        totalDiv.textContent = formatUSD(totalBalance);
+        
+        const pnlClass = totalPnl > 0 ? 'pnl-positive' : totalPnl < 0 ? 'pnl-negative' : 'pnl-zero';
+        totalPnlDiv.className = 'total-item-value ' + pnlClass;
+        totalPnlDiv.innerHTML = formatUSD(totalPnl, true) + ' <small>(' + (totalPnlPct >= 0 ? '+' : '') + totalPnlPct.toFixed(1) + '%)</small>';
+        
+        const totalPosPnlDiv = document.getElementById('totalPosPnl');
+        const posPnlClass = totalUnrealizedPnl > 0 ? 'pnl-positive' : totalUnrealizedPnl < 0 ? 'pnl-negative' : 'pnl-zero';
+        totalPosPnlDiv.className = 'total-item-value ' + posPnlClass;
+        totalPosPnlDiv.textContent = formatUSD(totalUnrealizedPnl, true);
+        
+        totalPositionsDiv.textContent = totalPositions + '/' + ACCOUNTS.length;
+        
+        accountsDiv.innerHTML = html;
+        updatedDiv.textContent = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      } catch (e) {
+        accountsDiv.innerHTML = '<div class="loading-placeholder">Error: ' + e.message + '</div>';
+      } finally {
+        refreshBtn.classList.remove('loading');
+      }
+    }
+
+    loadAll();
+    
+    // Auto refresh every 30 seconds
+    setInterval(loadAll, 30000);
+  </script>
+</body>
+</html>

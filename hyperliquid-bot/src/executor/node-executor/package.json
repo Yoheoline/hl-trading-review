@@ -1,0 +1,15 @@
+﻿{
+  "name": "hyperliquid-executor",
+  "version": "1.0.0",
+  "description": "Hyperliquid order executor using official SDK",
+  "main": "executor.js",
+  "type": "module",
+  "scripts": {
+    "start": "node executor.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "hyperliquid": "^1.4.1",
+    "dotenv": "^16.4.5"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "mode": "LIVE",
+  "account": 3,
+  "coin": "BTC",
+  "size": 0.0003,
+  "interval": "5m",
+  "checkInterval": 15000,
+  "priceWindowMinutes": 30,
+  "takeProfitPct": 0.02,
+  "stopLossPct": 0.0075,
+  "maxPositionMinutes": 120,
+  "cooldownMinutes": 5,
+  "signals": {
+    "rangeBounce": true
+  },
+  "rangeWindow": 50,
+  "rangeBounceZone": 0.15,
+  "riskPerTrade": 0.1,
+  "positionMode": "pyramid",
+  "maxPyramid": 5
+}

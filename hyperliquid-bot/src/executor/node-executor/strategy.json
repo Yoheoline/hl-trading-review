@@ -1,0 +1,1 @@
+{"enabled":true,"mode":"LIVE","coin":"BTC","size":0.00015,"checkInterval":5000,"priceWindowMinutes":3,"entryThreshold":0.0005,"breakoutWindowMinutes":10,"takeProfitPct":0.003,"stopLossPct":0.0015,"maxPositionMinutes":30,"cooldownMinutes":2,"signals":{"momentum":true,"breakout":true}}

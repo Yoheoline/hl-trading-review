@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "mode": "LIVE",
+  "account": 2,
+  "coin": "BTC",
+  "interval": "15m",
+  "checkInterval": 15000,
+  "strategy": "rsiMomentum",
+  "positionMode": "full",
+  "maxPyramid": 3,
+  "takeProfitPct": 0.02,
+  "stopLossPct": 0.0025,
+  "useFiboTPSL": true,
+  "fiboTPLevel": 2,
+  "fiboSLLevel": 0.5,
+  "fiboLookback": 50,
+  "rsiPeriod": 21,
+  "rsiOversold": 35,
+  "rsiOverbought": 65,
+  "momentumWindow": 3,
+  "momentumThreshold": 0.002,
+  "riskPerTrade": 0.1
+}

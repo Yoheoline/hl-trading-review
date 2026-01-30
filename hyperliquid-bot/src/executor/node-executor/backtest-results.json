@@ -1,0 +1,170 @@
+[
+  {
+    "name": "RSI",
+    "params": {
+      "period": 14,
+      "oversold": 30,
+      "overbought": 70
+    },
+    "risk": {
+      "tp": 0.005,
+      "sl": 0.0025,
+      "maxHold": 60,
+      "cooldown": 3
+    },
+    "trades": 95,
+    "wins": 50,
+    "winRate": "52.6",
+    "totalPnl": "3.79"
+  },
+  {
+    "name": "Breakout",
+    "params": {
+      "windowMinutes": 10
+    },
+    "risk": {
+      "tp": 0.005,
+      "sl": 0.0025,
+      "maxHold": 60,
+      "cooldown": 3
+    },
+    "trades": 98,
+    "wins": 48,
+    "winRate": "49.0",
+    "totalPnl": "1.85"
+  },
+  {
+    "name": "Momentum",
+    "params": {
+      "windowMinutes": 5,
+      "threshold": 0.0005
+    },
+    "risk": {
+      "tp": 0.005,
+      "sl": 0.0025,
+      "maxHold": 60,
+      "cooldown": 3
+    },
+    "trades": 114,
+    "wins": 50,
+    "winRate": "43.9",
+    "totalPnl": "0.75"
+  },
+  {
+    "name": "Momentum",
+    "params": {
+      "windowMinutes": 10,
+      "threshold": 0.001
+    },
+    "risk": {
+      "tp": 0.005,
+      "sl": 0.0025,
+      "maxHold": 60,
+      "cooldown": 3
+    },
+    "trades": 102,
+    "wins": 45,
+    "winRate": "44.1",
+    "totalPnl": "0.62"
+  },
+  {
+    "name": "Momentum",
+    "params": {
+      "windowMinutes": 10,
+      "threshold": 0.001
+    },
+    "risk": {
+      "tp": 0.003,
+      "sl": 0.0015,
+      "maxHold": 30,
+      "cooldown": 2
+    },
+    "trades": 211,
+    "wins": 91,
+    "winRate": "43.1",
+    "totalPnl": "0.44"
+  },
+  {
+    "name": "Momentum",
+    "params": {
+      "windowMinutes": 5,
+      "threshold": 0.0005
+    },
+    "risk": {
+      "tp": 0.003,
+      "sl": 0.0015,
+      "maxHold": 30,
+      "cooldown": 2
+    },
+    "trades": 234,
+    "wins": 108,
+    "winRate": "46.2",
+    "totalPnl": "-0.00"
+  },
+  {
+    "name": "Breakout",
+    "params": {
+      "windowMinutes": 10
+    },
+    "risk": {
+      "tp": 0.003,
+      "sl": 0.0015,
+      "maxHold": 30,
+      "cooldown": 2
+    },
+    "trades": 199,
+    "wins": 78,
+    "winRate": "39.2",
+    "totalPnl": "-0.09"
+  },
+  {
+    "name": "Breakout",
+    "params": {
+      "windowMinutes": 5
+    },
+    "risk": {
+      "tp": 0.003,
+      "sl": 0.0015,
+      "maxHold": 30,
+      "cooldown": 2
+    },
+    "trades": 213,
+    "wins": 89,
+    "winRate": "41.8",
+    "totalPnl": "-0.38"
+  },
+  {
+    "name": "RSI",
+    "params": {
+      "period": 14,
+      "oversold": 30,
+      "overbought": 70
+    },
+    "risk": {
+      "tp": 0.003,
+      "sl": 0.0015,
+      "maxHold": 30,
+      "cooldown": 2
+    },
+    "trades": 184,
+    "wins": 76,
+    "winRate": "41.3",
+    "totalPnl": "-2.27"
+  },
+  {
+    "name": "Breakout",
+    "params": {
+      "windowMinutes": 5
+    },
+    "risk": {
+      "tp": 0.005,
+      "sl": 0.0025,
+      "maxHold": 60,
+      "cooldown": 3
+    },
+    "trades": 114,
+    "wins": 43,
+    "winRate": "37.7",
+    "totalPnl": "-3.99"
+  }
+]

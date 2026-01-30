@@ -1,0 +1,21 @@
+{
+  "enabled": true,
+  "mode": "PAPER",
+  "coin": "BTC",
+  "size": 0.00015,
+  "checkInterval": 5000,
+  "priceWindowMinutes": 30,
+  "entryThreshold": 0.002,
+  "takeProfitPct": 0.003,
+  "stopLossPct": 0.0015,
+  "maxPositionMinutes": 30,
+  "cooldownMinutes": 2,
+  "signals": {
+    "momentum": false,
+    "breakout": false,
+    "rsi": true
+  },
+  "rsiPeriod": 14,
+  "rsiOversold": 30,
+  "rsiOverbought": 70
+}
