@@ -193,14 +193,64 @@ async function updateRiskGate() {
     allowNewEntry = false;
   }
 
-  // --- 4. Check daily P&L ---
-  const dailyPnlPct = INITIAL_CAPITAL > 0 ? (dailyPnl / INITIAL_CAPITAL * 100) : 0;
+  // --- 3.7 Add realizedPnL from trade-history.json (Gemini改善) ---
+  let realizedPnlToday = 0;
+  try {
+    if (existsSync(TRADE_HISTORY_PATH)) {
+      const trades = JSON.parse(readFileSync(TRADE_HISTORY_PATH, 'utf-8'));
+      const todayStr = now.toISOString().slice(0, 10); // YYYY-MM-DD
+      const todayTrades = trades.filter(t => t.time && t.time.startsWith(todayStr));
+      realizedPnlToday = todayTrades.reduce((sum, t) => sum + (parseFloat(t.pnl) || 0), 0);
+    }
+  } catch (e) {
+    // trade-history.json may be empty or malformed
+  }
+  const totalDailyPnl = dailyPnl + realizedPnlToday; // unrealized + realized
+
+  // --- 4. Check daily P&L (unrealized + realized) ---
+  const dailyPnlPct = INITIAL_CAPITAL > 0 ? (totalDailyPnl / INITIAL_CAPITAL * 100) : 0;
   if (dailyPnlPct < -DAILY_LOSS_STOP_PCT) {
     const tomorrow = new Date(now);
     tomorrow.setHours(24, 0, 0, 0); // midnight tonight = start of tomorrow
     lockedUntil = tomorrow.toISOString();
     reasons.push(`🚨 日次損失 ${dailyPnlPct.toFixed(2)}% > -${DAILY_LOSS_STOP_PCT}% → 翌日までタイムロック`);
     allowNewEntry = false;
+  }
+
+  // --- 4.5 Check consecutive loss days (Gemini改善) ---
+  try {
+    if (existsSync(TRADE_HISTORY_PATH)) {
+      const trades = JSON.parse(readFileSync(TRADE_HISTORY_PATH, 'utf-8'));
+      if (trades.length > 0) {
+        // Group trades by date, calculate daily PnL
+        const dailyPnls = {};
+        for (const t of trades) {
+          if (!t.time) continue;
+          const date = t.time.slice(0, 10);
+          dailyPnls[date] = (dailyPnls[date] || 0) + (parseFloat(t.pnl) || 0);
+        }
+        // Count consecutive loss days ending at yesterday (today is still in progress)
+        const dates = Object.keys(dailyPnls).sort().reverse();
+        let consecutiveLosses = 0;
+        for (const date of dates) {
+          if (date === now.toISOString().slice(0, 10)) continue; // skip today
+          if (dailyPnls[date] < 0) {
+            consecutiveLosses++;
+          } else {
+            break;
+          }
+        }
+        if (consecutiveLosses >= CONSECUTIVE_LOSS_DAYS) {
+          reasons.push(`📉 連続${consecutiveLosses}日マイナス ≧ ${CONSECUTIVE_LOSS_DAYS}日 → 1日停止`);
+          allowNewEntry = false;
+          const tomorrow = new Date(now);
+          tomorrow.setHours(24, 0, 0, 0);
+          if (!lockedUntil) lockedUntil = tomorrow.toISOString();
+        }
+      }
+    }
+  } catch (e) {
+    // trade-history.json parse error — non-fatal
   }
 
   // --- 5. Check BTC volatility ---
@@ -293,7 +343,9 @@ async function updateRiskGate() {
       effectiveBalance: parseFloat(effectiveBalance.toFixed(2)),
       totalExposure: parseFloat(totalExposure.toFixed(2)),
       exposurePct: parseFloat(exposurePct.toFixed(1)),
-      dailyPnl: parseFloat(dailyPnl.toFixed(2)),
+      dailyUnrealizedPnl: parseFloat(dailyPnl.toFixed(2)),
+      dailyRealizedPnl: parseFloat(realizedPnlToday.toFixed(2)),
+      dailyTotalPnl: parseFloat(totalDailyPnl.toFixed(2)),
       dailyPnlPct: parseFloat(dailyPnlPct.toFixed(2)),
       directions,
       faWarning: fa.level,
