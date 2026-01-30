@@ -7,6 +7,7 @@ import { Hyperliquid } from 'hyperliquid';
 import dotenv from 'dotenv';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync, existsSync } from 'fs';
 
 // Load .env from project root
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -66,7 +67,43 @@ async function main() {
         result = await placeOrder(args[1], parseFloat(args[2]), false, args[3] ? parseFloat(args[3]) : null);
         break;
         
-      case 'market_open':
+      case 'market_open': {
+        // === RISK GATE CHECK (CRITICAL) ===
+        // Block new entries if CRO has disabled trading
+        const RISK_GATE_PATH = 'C:/clawd/memory/hyperliquid/risk-gate.json';
+        if (existsSync(RISK_GATE_PATH)) {
+          try {
+            const riskGate = JSON.parse(readFileSync(RISK_GATE_PATH, 'utf8'));
+            if (!riskGate.allowNewEntry) {
+              console.log(JSON.stringify({
+                blocked: true,
+                reason: 'Risk gate: new entries blocked by CRO',
+                gate: {
+                  allowNewEntry: false,
+                  reasons: riskGate.reasons || [],
+                  dangerScore: riskGate.dangerScore,
+                  updatedAt: riskGate.updatedAt
+                }
+              }));
+              process.exit(0);
+            }
+            // Check direction-specific blocks
+            const isBuyArg = args[3] === 'true' || args[5] === 'true' || args[6] === 'true';
+            if (isBuyArg && riskGate.blockedDirections?.includes('long')) {
+              console.log(JSON.stringify({ blocked: true, reason: 'Risk gate: LONG direction blocked by CRO' }));
+              process.exit(0);
+            }
+            if (!isBuyArg && riskGate.blockedDirections?.includes('short')) {
+              console.log(JSON.stringify({ blocked: true, reason: 'Risk gate: SHORT direction blocked by CRO' }));
+              process.exit(0);
+            }
+          } catch (e) {
+            console.error(`[RISK GATE] Warning: could not read risk-gate.json: ${e.message}`);
+            // Fail-open: continue if file is corrupted (CRO will fix on next run)
+          }
+        }
+        // === END RISK GATE CHECK ===
+
         // market_open <coin> <size> <is_buy:true/false> [slippage]
         // market_open <coin> risk <riskAmount> <slPct> <is_buy:true/false> [slippage]
         if (args[2] === 'risk_pct') {
@@ -107,7 +144,7 @@ async function main() {
           result = await marketOpen(args[1], parseFloat(args[2]), args[3] === 'true', args[4] ? parseFloat(args[4]) : 0.01);
         }
         break;
-        
+      }
       case 'market_close':
         // market_close <coin> [size] [slippage]
         result = await marketClose(args[1], args[2] ? parseFloat(args[2]) : null, args[3] ? parseFloat(args[3]) : 0.01);

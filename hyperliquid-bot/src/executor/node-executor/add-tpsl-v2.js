@@ -106,7 +106,7 @@ async function addTPSL() {
           console.error(`  ❌ TP failed:`, e.message, e.stack?.substring(0, 200));
         }
         
-        // Place SL order
+        // Place SL order (CRITICAL: if SL fails, close position immediately)
         try {
           const slOrder = {
             coin: coin,
@@ -127,6 +127,16 @@ async function addTPSL() {
           console.log(`  ✅ SL result:`, JSON.stringify(slResult).substring(0, 200));
         } catch (e) {
           console.error(`  ❌ SL failed:`, e.message, e.stack?.substring(0, 200));
+          // CRITICAL FALLBACK: Position has no stop-loss protection
+          // Immediately close the position to prevent unlimited loss
+          console.error(`  🚨 EMERGENCY: SL failed — closing position to prevent unprotected exposure`);
+          try {
+            const closeResult = await sdk.custom.marketClose(coin, null, 0.02);
+            console.error(`  🚨 Emergency close result:`, JSON.stringify(closeResult).substring(0, 200));
+          } catch (closeErr) {
+            console.error(`  🚨🚨 CRITICAL: Emergency close ALSO failed:`, closeErr.message);
+            // At this point, Position Monitor (CRO) will catch the unprotected position
+          }
         }
       }
     } catch (e) {
